@@ -34,3 +34,12 @@ test('the global build sets window.NcUnitInput with the same functions', () => {
   assert.deepEqual(Object.keys(window.NcUnitInput).sort(), Object.keys(U).sort());
   assert.equal(window.NcUnitInput.parseUnitValue('1/4"', false), 6.35);
 });
+
+test('a decimal comma reads as a point', () => {
+  const { parseUnitValue } = U;
+  assert.equal(parseUnitValue('1,5mm', false), 1.5);
+  assert.equal(parseUnitValue('0,25in', false), 6.35);
+  assert.equal(parseUnitValue(',5', true), 0.5);
+  assert.equal(parseUnitValue('12,5', false), 12.5);
+  assert.equal(U.textToMm('6,35mm', true), 6.35);
+});

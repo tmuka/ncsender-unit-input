@@ -9,6 +9,7 @@ or inches, whatever the machine uses, and it becomes the machine's units:
 | `1/4"`, `.25in`, `1-1/2"`, `1 1/2 in` | 6.35, 6.35, 38.1, 38.1 | 0.25, 0.25, 1.5, 1.5 |
 | `6.35mm`, `0.635cm` | 6.35 | 0.25 |
 | `8mm*2`, `1in+4mm`, `(1/4"+2mm)/2` | 16, 29.4, 4.175 | 0.6299, 1.1575, 0.1644 |
+| `1,5mm`, `,25in` (decimal comma) | 1.5, 6.35 | 0.0591, 0.25 |
 | feeds: `100ipm`, `2540 mm/min`, `25mm/s` | 2540, 2540, 1500 | 100, 100, 59.0551 |
 
 From QuickCut's `lib/unit-input.cjs` (the parser) and Spoilboard Toolbox (the
