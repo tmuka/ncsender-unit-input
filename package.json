@@ -1,0 +1,20 @@
+{
+  "name": "ncsender-unit-input",
+  "version": "0.1.0",
+  "description": "Unit-aware number fields for ncSender plugins: type 1/4\", 6.35mm or 100ipm in any field and get the machine's units",
+  "type": "module",
+  "main": "./dist/unit-input.cjs",
+  "module": "./src/unit-input.js",
+  "exports": {
+    ".": { "import": "./src/unit-input.js", "require": "./dist/unit-input.cjs" },
+    "./global": "./dist/unit-input.global.js"
+  },
+  "files": ["src", "dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node build.mjs --check && node --test tests/"
+  },
+  "author": "Tony Muka",
+  "license": "GPL-3.0",
+  "keywords": ["ncsender", "cnc", "units", "inch", "mm"]
+}
