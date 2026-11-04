@@ -27,15 +27,15 @@ test('leaving a field rewrites typed units as the machine units', () => {
   const root = fakeRoot();
   wireUnitFields(root, { imperial: true });
   const el = field('6.35mm');
-  root.fire('focusout', { target: el });
+  root.fire('blur', { target: el });
   assert.equal(el.value, 0.25);
   assert.deepEqual(el.events, ['input']);
   const plain = field('0.25');
-  root.fire('focusout', { target: plain });
+  root.fire('blur', { target: plain });
   assert.equal(plain.value, '0.25');
   assert.deepEqual(plain.events, [], 'a plain number is left alone');
   const bad = field('abc');
-  root.fire('focusout', { target: bad });
+  root.fire('blur', { target: bad });
   assert.equal(bad.value, 'abc', 'unreadable text is left for the plugin to flag');
 });
 
@@ -57,7 +57,7 @@ test('fields without data-unit are not touched', () => {
   wireUnitFields(root, { imperial: true });
   const el = field('6mm', { 'data-unit': undefined });
   delete el.getAttribute; el.getAttribute = () => null;
-  root.fire('focusout', { target: el });
+  root.fire('blur', { target: el });
   assert.equal(el.value, '6mm');
 });
 
@@ -95,5 +95,5 @@ test('arrows read typed units first; unwire removes the listeners', () => {
   root.fire('keydown', key(el, 'ArrowUp', { altKey: true }));
   assert.equal(el.value, 0.35);
   unwire();
-  assert.equal(root.handlers.focusout.length + root.handlers.keydown.length, 0);
+  assert.equal(root.handlers.blur.length + root.handlers.keydown.length, 0);
 });

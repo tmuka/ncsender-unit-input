@@ -200,8 +200,9 @@ function roundInches(inch) {
  * ("length" or "feed") work like QuickCut's:
  * - Leaving it (or Enter) rewrites what was typed as a plain number in the
  *   active units ("6mm" -> 0.2362 on an inch machine) and fires `input`.
- *   It runs in the capture phase on root, so the plugin's own focusout,
- *   blur and Enter handlers see the plain number.
+ *   It listens for blur (not focusout, which fires after the field's own
+ *   blur) in the capture phase on root, so the plugin's own blur,
+ *   focusout and Enter handlers see the plain number.
  * - Up / Down step the value like Chrome DevTools: 1, Shift 10, Alt
  *   (Option) 0.1, Ctrl (Command) 0.001, in the field's units. A step never
  *   goes under the field's min (data-min or min): it stops at a whole
@@ -225,7 +226,7 @@ function wireUnitFields(root, opts) {
     el.value = v;
     el.dispatchEvent(new Event('input', { bubbles: true }));
   }
-  function onFocusOut(evt) {
+  function onBlur(evt) {
     var el = unitField(evt.target);
     if (el) normalize(el);
   }
@@ -252,10 +253,10 @@ function wireUnitFields(root, opts) {
     el.dispatchEvent(new Event('input', { bubbles: true }));
     if (opts.onStep) opts.onStep(el);
   }
-  root.addEventListener('focusout', onFocusOut, true);
+  root.addEventListener('blur', onBlur, true);
   root.addEventListener('keydown', onKeyDown, true);
   return function unwire() {
-    root.removeEventListener('focusout', onFocusOut, true);
+    root.removeEventListener('blur', onBlur, true);
     root.removeEventListener('keydown', onKeyDown, true);
   };
 }

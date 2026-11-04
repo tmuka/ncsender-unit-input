@@ -25,7 +25,7 @@ import { wireUnitFields, textToMm, formatMm } from 'ncsender-unit-input';
 const imperial = settings.unitsPreference === 'imperial';
 // <input type="text" data-unit="length" min="0" value="${formatMm(thicknessMm, imperial)}">
 wireUnitFields(root, { imperial: () => imperial });
-// in your change / focusout handler:
+// in your blur or focusout handler (change fires before the conversion):
 const mm = textToMm(input.value, imperial); // null when unreadable
 ```
 
