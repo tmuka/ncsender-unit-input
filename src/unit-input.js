@@ -24,8 +24,12 @@ export var MM_PER_INCH = 25.4;
 // when it can't be read. QuickCut's parser (parseUnitQuantity), plus
 // simple math from Spoilboard Toolbox (parseUnitMath) when it isn't a single value.
 export function parseUnitValue(text, isImperial, kind) {
-  // A decimal comma (1,5mm, ,25in) reads as a point
-  text = String(text == null ? '' : text).replace(/,/g, '.');
+  // A decimal comma (1,5mm, ,25in) reads as a point, but not one before
+  // exactly three digits: 1,000 or 2,540 may be a thousands separator, and
+  // 1 or 2.54 instead would be quietly wrong, so that's unreadable.
+  text = String(text == null ? '' : text);
+  if (/\d,\d{3}(?!\d)/.test(text)) return null;
+  text = text.replace(/,/g, '.');
   var one = parseUnitQuantity(text, isImperial, kind);
   return one !== null ? one : parseUnitMath(text, isImperial, kind);
 }

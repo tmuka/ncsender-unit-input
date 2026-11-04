@@ -94,3 +94,13 @@ test('parseUnitValue: simple math, with or without units', () => {
     assert.equal(parseUnitValue(bad, M, 'length'), null, bad);
   }
 });
+
+test('a decimal comma reads as a point, but not a thousands separator', () => {
+  assert.equal(parseUnitValue('1,5mm', false, 'length'), 1.5);
+  assert.equal(parseUnitValue(',25in', false, 'length'), 6.35);
+  assert.equal(parseUnitValue('1,25', false, 'length'), 1.25);
+  assert.equal(parseUnitValue('1,2345', false, 'length'), 1.2345);
+  for (const t of ['1,000', '2,540', '1,500 mm/min', '1,000mm', '2+1,000']) {
+    assert.equal(parseUnitValue(t, false, 'feed'), null, t);
+  }
+});
