@@ -39,6 +39,10 @@ Plugins without a build: load or paste `dist/unit-input.global.js`; it sets
 - `parseUnitValue(text, isImperial, kind)`: typed text to a number in the
   machine's units (4 decimals in inches, 3 in mm). `kind` is `'length'` or
   `'feed'` (per minute). `null` when it can't be read.
+- `unitValueProblem(text)`: why `parseUnitValue` refused a comma before
+  exactly three digits (`1,000` may be a thousands separator), as a message
+  for the operator: "1,000 could be 1000 or 1.000: write 1000, or 1,0 for a
+  decimal". `null` otherwise.
 - `textToMm(text, isImperial, kind)`: the same in mm (or mm/min).
 - `formatMm(mm, isImperial)`: a mm value as field text in the machine's units.
 - `displayToMm(v, isImperial)`, `mmToDisplay(mm, isImperial)`,

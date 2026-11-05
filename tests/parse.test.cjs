@@ -1,7 +1,7 @@
 // From QuickCut's tests/unit-input.test.cjs (the same parser).
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { parseUnitValue } = require('../dist/unit-input.cjs');
+const { parseUnitValue, unitValueProblem } = require('../dist/unit-input.cjs');
 
 const METRIC = false, IMPERIAL = true;
 
@@ -103,4 +103,8 @@ test('a decimal comma reads as a point, but not a thousands separator', () => {
   for (const t of ['1,000', '2,540', '1,500 mm/min', '1,000mm', '2+1,000']) {
     assert.equal(parseUnitValue(t, false, 'feed'), null, t);
   }
+  assert.equal(unitValueProblem('1,000'), '1,000 could be 1000 or 1.000: write 1000, or 1,0 for a decimal');
+  assert.equal(unitValueProblem('6,350mm'), '6,350 could be 6350 or 6.350: write 6350, or 6,35 for a decimal');
+  assert.equal(unitValueProblem('1,5mm'), null);
+  assert.equal(unitValueProblem('abc'), null);
 });

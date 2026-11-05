@@ -35,6 +35,15 @@ function parseUnitValue(text, isImperial, kind) {
   var one = parseUnitQuantity(text, isImperial, kind);
   return one !== null ? one : parseUnitMath(text, isImperial, kind);
 }
+// Why parseUnitValue can't read text, when it's a comma before exactly three
+// digits: a message to show the operator, e.g. "1,000 could be 1000 or
+// 1.000: write 1000, or 1,0 for a decimal". null otherwise.
+function unitValueProblem(text) {
+  var m = /(\d+),(\d{3})(?!\d)/.exec(String(text == null ? '' : text));
+  if (!m) return null;
+  return m[0] + ' could be ' + m[1] + m[2] + ' or ' + m[1] + '.' + m[2] + ': write ' + m[1] + m[2] + ', or ' +
+    m[1] + ',' + (m[2].replace(/0+$/, '') || '0') + ' for a decimal';
+}
 // mm per unit (per minute for feeds) of the units a field takes.
 function unitMmPer(kind) {
   var MM_PER = { mm: 1, cm: 10, 'in': 25.4, inch: 25.4, inches: 25.4, '"': 25.4 };
@@ -265,6 +274,6 @@ function wireUnitFields(root, opts) {
   };
 }
 
-return { MM_PER_INCH: MM_PER_INCH, parseUnitValue: parseUnitValue, unitMmPer: unitMmPer, parseUnitMath: parseUnitMath, parseUnitQuantity: parseUnitQuantity, roundDisplay: roundDisplay, mmToDisplay: mmToDisplay, displayToMm: displayToMm, formatMm: formatMm, textToMm: textToMm, roundInches: roundInches, wireUnitFields: wireUnitFields };
+return { MM_PER_INCH: MM_PER_INCH, parseUnitValue: parseUnitValue, unitValueProblem: unitValueProblem, unitMmPer: unitMmPer, parseUnitMath: parseUnitMath, parseUnitQuantity: parseUnitQuantity, roundDisplay: roundDisplay, mmToDisplay: mmToDisplay, displayToMm: displayToMm, formatMm: formatMm, textToMm: textToMm, roundInches: roundInches, wireUnitFields: wireUnitFields };
 })();
 if (typeof window !== 'undefined') window.NcUnitInput = NcUnitInput;

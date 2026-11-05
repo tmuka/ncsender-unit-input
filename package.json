@@ -1,6 +1,6 @@
 {
   "name": "ncsender-unit-input",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Unit-aware number fields for ncSender plugins: type 1/4\", 6.35mm or 100ipm in any field and get the machine's units",
   "type": "module",
   "main": "./dist/unit-input.cjs",
