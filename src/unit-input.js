@@ -26,9 +26,10 @@ export var MM_PER_INCH = 25.4;
 export function parseUnitValue(text, isImperial, kind) {
   // A decimal comma (1,5mm, ,25in) reads as a point, but not one before
   // exactly three digits: 1,000 or 2,540 may be a thousands separator, and
-  // 1 or 2.54 instead would be quietly wrong, so that's unreadable.
+  // 1 or 2.54 instead would be quietly wrong, so that's unreadable. After a
+  // 0 (0,125) it can only be a decimal.
   text = String(text == null ? '' : text);
-  if (/\d,\d{3}(?!\d)/.test(text)) return null;
+  if (THOUSANDS.test(text)) return null;
   text = text.replace(/,/g, '.');
   var one = parseUnitQuantity(text, isImperial, kind);
   return one !== null ? one : parseUnitMath(text, isImperial, kind);
@@ -37,11 +38,16 @@ export function parseUnitValue(text, isImperial, kind) {
 // digits: a message to show the operator, e.g. "1,000 could be 1000 or
 // 1.000: write 1000, or 1,0 for a decimal". null otherwise.
 export function unitValueProblem(text) {
-  var m = /(\d+),(\d{3})(?!\d)/.exec(String(text == null ? '' : text));
+  var m = THOUSANDS.exec(String(text == null ? '' : text));
   if (!m) return null;
-  return m[0] + ' could be ' + m[1] + m[2] + ' or ' + m[1] + '.' + m[2] + ': write ' + m[1] + m[2] + ', or ' +
-    m[1] + ',' + (m[2].replace(/0+$/, '') || '0') + ' for a decimal';
+  // The decimal with the comma shortened (1,0), or with a point when it can't be (1.125).
+  var short = m[3].replace(/0+$/, '') || '0';
+  return m[2] + ',' + m[3] + ' could be ' + m[2] + m[3] + ' or ' + m[2] + '.' + m[3] + ': write ' + m[2] + m[3] + ', or ' +
+    (short.length < 3 ? m[2] + ',' + short : m[2] + '.' + m[3]) + ' for a decimal';
 }
+// A comma that may be a thousands separator: digits not starting with 0, a
+// comma, exactly three digits.
+var THOUSANDS = /(^|[^\d])([1-9]\d*),(\d{3})(?!\d)/;
 // mm per unit (per minute for feeds) of the units a field takes.
 export function unitMmPer(kind) {
   var MM_PER = { mm: 1, cm: 10, 'in': 25.4, inch: 25.4, inches: 25.4, '"': 25.4 };

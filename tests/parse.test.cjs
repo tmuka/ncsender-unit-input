@@ -106,5 +106,13 @@ test('a decimal comma reads as a point, but not a thousands separator', () => {
   assert.equal(unitValueProblem('1,000'), '1,000 could be 1000 or 1.000: write 1000, or 1,0 for a decimal');
   assert.equal(unitValueProblem('6,350mm'), '6,350 could be 6350 or 6.350: write 6350, or 6,35 for a decimal');
   assert.equal(unitValueProblem('1,5mm'), null);
+  // After a 0 it can only be a decimal.
+  assert.equal(parseUnitValue('0,125', false, 'length'), 0.125);
+  assert.equal(parseUnitValue('0,250in', false, 'length'), 6.35);
+  assert.equal(parseUnitValue('2+0,125', false, 'length'), 2.125);
+  assert.equal(unitValueProblem('0,125'), null);
+  // A decimal that can't be shortened is suggested with a point, not as typed.
+  assert.equal(unitValueProblem('1,125'), '1,125 could be 1125 or 1.125: write 1125, or 1.125 for a decimal');
+  assert.equal(parseUnitValue('1.125', false, 'length'), 1.125);
   assert.equal(unitValueProblem('abc'), null);
 });
